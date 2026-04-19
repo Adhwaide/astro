@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
+const BASE = import.meta.env.VITE_API_URL || '';
 
 export const useChartData = () => {
   const [loading, setLoading] = useState(false);
@@ -19,17 +19,17 @@ export const useChartData = () => {
     try {
       // Execute all three backend calls in parallel
       const [chartRes, dashaRes, reportRes] = await Promise.all([
-        fetch(`${API_BASE_URL}/chart`, {
+        fetch(`${BASE}/api/chart`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(formData),
         }),
-        fetch(`${API_BASE_URL}/dasha`, {
+        fetch(`${BASE}/api/dasha`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(formData),
         }),
-        fetch(`${API_BASE_URL}/report`, {
+        fetch(`${BASE}/api/report`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(formData),
@@ -66,7 +66,7 @@ export const useChartData = () => {
     setDivisionalLoading(true);
     setError(null);
     try {
-      const res = await fetch(`${API_BASE_URL}/divisional`, {
+      const res = await fetch(`${BASE}/api/divisional`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...formData, chart_type: chartType }),

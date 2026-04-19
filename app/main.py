@@ -20,7 +20,7 @@ app = FastAPI(
 # e.g. "https://yourusername.github.io"
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["https://adhwaide.github.io"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
