@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+venv/
+venv311/
+.env
+
+# Ephemeris (large binary files — download separately)
+# REMOVE this line if you want to commit ephe/ to the repo
+# backend/ephe/
+
+# Node
+node_modules/
+dist/
+.env.local
+.env.production.local
