@@ -58,12 +58,14 @@ def _d10_dasamsa(sign: int, degree: float) -> int:
     Odd signs: count starts from the same sign.
     Even signs: count starts from the 9th sign from it.
     """
-    division = min(int(degree / 3.0), 9)  # 0–9
+    # Add epsilon to prevent truncation at exact boundaries
+    division = min(int((degree / 3.0) + 1e-9), 9)  # 0–9
     is_odd = (sign % 2 == 0)  # index 0=Mesha is odd
     if is_odd:
         return (sign + division) % 12
     else:
-        return (sign + 9 + division) % 12
+        # 9th sign from it means adding 8 (e.g. 9th from Taurus(1) is Capricorn(9), 1 + 8 = 9)
+        return (sign + 8 + division) % 12
 
 
 def _d30_trimsamsa(sign: int, degree: float) -> int:

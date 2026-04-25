@@ -31,8 +31,11 @@ export default function SouthIndianChart({ chartData }) {
     <div className="glass-panel" style={{ padding: '2rem', maxWidth: '600px', margin: '0 auto', display: 'flex', justifyContent: 'center' }}>
       <svg 
         viewBox="0 0 400 400" 
-        style={{ width: '100%', maxWidth: '400px', height: 'auto', background: 'rgba(0,0,0,0.2)', border: '2px solid var(--color-gold-deep)', borderRadius: '4px' }}
+        style={{ width: '100%', maxWidth: '400px', height: 'auto', border: '2px solid var(--color-gold-deep)', borderRadius: '4px' }}
       >
+        {/* Explicit dark background rectangle to fix rendering bugs in some browsers */}
+        <rect width="400" height="400" fill="#0B0A11" />
+        <rect width="400" height="400" fill="rgba(0,0,0,0.3)" />
         <defs>
           <style>{`
             .south-bg { fill: rgba(0,0,0,0.2); stroke: var(--color-glass-border); stroke-width: 1px; transition: fill 0.3s ease; }
