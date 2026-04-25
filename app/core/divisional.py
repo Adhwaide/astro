@@ -46,7 +46,8 @@ def _d9_navamsha(sign: int, degree: float) -> int:
     element_starts = {0: 0, 1: 9, 2: 6, 3: 3}
     element = sign % 4
     start = element_starts[element]
-    division = min(int(degree / (30.0 / 9)), 8)  # 0–8
+    # Add a tiny epsilon to prevent floating-point truncation at exact boundaries
+    division = min(int((degree * 9 / 30.0) + 1e-9), 8)  # 0–8
     return (start + division) % 12
 
 
@@ -76,33 +77,21 @@ def _d30_trimsamsa(sign: int, degree: float) -> int:
         Mars→Mesha(0), Saturn→Kumbha(10), Jupiter→Dhanu(8),
         Mercury→Mithuna(2), Venus→Tula(6)
     """
-    lord_to_sign = {"Ma": 0, "Sa": 10, "Ju": 8, "Me": 2, "Ve": 6}
-
     is_odd = (sign % 2 == 0)  # index 0=Mesha is odd
     if is_odd:
-        # Odd sign: Ma 0-5, Sa 5-10, Ju 10-18, Me 18-25, Ve 25-30
-        if degree < 5.0:
-            return lord_to_sign["Ma"]
-        elif degree < 10.0:
-            return lord_to_sign["Sa"]
-        elif degree < 18.0:
-            return lord_to_sign["Ju"]
-        elif degree < 25.0:
-            return lord_to_sign["Me"]
-        else:
-            return lord_to_sign["Ve"]
+        # Odd sign: Ma 0-5 (Aries=0), Sa 5-10 (Aquarius=10), Ju 10-18 (Sag=8), Me 18-25 (Gemini=2), Ve 25-30 (Libra=6)
+        if degree < 5.0: return 0
+        elif degree < 10.0: return 10
+        elif degree < 18.0: return 8
+        elif degree < 25.0: return 2
+        else: return 6
     else:
-        # Even sign: Ve 0-5, Me 5-12, Ju 12-20, Sa 20-25, Ma 25-30
-        if degree < 5.0:
-            return lord_to_sign["Ve"]
-        elif degree < 12.0:
-            return lord_to_sign["Me"]
-        elif degree < 20.0:
-            return lord_to_sign["Ju"]
-        elif degree < 25.0:
-            return lord_to_sign["Sa"]
-        else:
-            return lord_to_sign["Ma"]
+        # Even sign: Ve 0-5 (Taurus=1), Me 5-12 (Virgo=5), Ju 12-20 (Pisces=11), Sa 20-25 (Capricorn=9), Ma 25-30 (Scorpio=7)
+        if degree < 5.0: return 1
+        elif degree < 12.0: return 5
+        elif degree < 20.0: return 11
+        elif degree < 25.0: return 9
+        else: return 7
 
 
 DIVISIONAL_FUNCS = {

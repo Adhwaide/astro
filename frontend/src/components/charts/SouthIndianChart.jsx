@@ -31,7 +31,7 @@ export default function SouthIndianChart({ chartData }) {
     <div className="glass-panel" style={{ padding: '2rem', maxWidth: '600px', margin: '0 auto', display: 'flex', justifyContent: 'center' }}>
       <svg 
         viewBox="0 0 400 400" 
-        style={{ width: '100%', maxWidth: '400px', height: 'auto', background: 'var(--color-gold-deep)', border: '4px solid var(--color-gold-deep)', borderRadius: '4px' }}
+        style={{ width: '100%', maxWidth: '400px', height: 'auto', background: 'rgba(0,0,0,0.2)', border: '2px solid var(--color-gold-deep)', borderRadius: '4px' }}
       >
         <defs>
           <style>{`
