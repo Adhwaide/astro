@@ -7,6 +7,9 @@ class BirthData(BaseModel):
     dob: str        # "2004-02-28"
     tob: str        # "01:15"
     place: str      # "Kochi, Kerala, India"
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
+    timezone: Optional[str] = None
 
     @field_validator("dob")
     @classmethod

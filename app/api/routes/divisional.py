@@ -25,7 +25,15 @@ async def get_divisional(data: DivisionalRequest):
     Returns planet positions in the divisional chart with same structure as /api/chart.
     """
     try:
-        result = calculate_divisional(data.dob, data.tob, data.place, data.chart_type)
+        result = calculate_divisional(
+            data.dob,
+            data.tob,
+            data.place,
+            chart_type=data.chart_type,
+            latitude=data.latitude,
+            longitude=data.longitude,
+            timezone=data.timezone
+        )
         return result
     except ValueError as e:
         raise HTTPException(status_code=422, detail=str(e))

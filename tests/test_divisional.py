@@ -105,8 +105,8 @@ def test_divisional_charts():
     print(f"  D30 planet count: {len(d30['planets'])}  [{status}]")
     if not d30_ok:
         all_pass = False
-    # D30 only uses 5 signs (Ma=0, Sa=10, Ju=8, Me=2, Ve=6)
-    valid_d30 = {0, 2, 6, 8, 10}
+    # D30 only uses 5 signs for odd signs (0, 10, 8, 2, 6) and 5 signs for even signs (1, 5, 11, 9, 7)
+    valid_d30 = {0, 2, 6, 8, 10, 1, 5, 11, 9, 7}
     d30_signs_ok = all(p["sign"] in valid_d30 for p in d30["planets"])
     status = "OK" if d30_signs_ok else "FAIL"
     print(f"  D30 valid signs: {d30_signs_ok}  [{status}]")
@@ -127,9 +127,9 @@ def test_divisional_charts():
     # ── Final verdict ────────────────────────────────────────────────────────
     print(f"\n{'='*60}")
     if all_pass:
-        print("  RESULT : ALL DIVISIONAL CHECKS PASSED ✓")
+        print("  RESULT : ALL DIVISIONAL CHECKS PASSED [OK]")
     else:
-        print("  RESULT : SOME CHECKS FAILED — Review above")
+        print("  RESULT : SOME CHECKS FAILED - Review above")
     print(f"{'='*60}\n")
 
     assert all_pass, "Divisional verification failed"

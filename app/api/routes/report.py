@@ -27,8 +27,22 @@ async def get_report(data: BirthData):
     health, career, relationships, spirituality, current_period_summary
     """
     try:
-        chart = calculate_chart(data.dob, data.tob, data.place)
-        dasha = calculate_dasha(data.dob, data.tob, data.place)
+        chart = calculate_chart(
+            data.dob,
+            data.tob,
+            data.place,
+            latitude=data.latitude,
+            longitude=data.longitude,
+            timezone=data.timezone
+        )
+        dasha = calculate_dasha(
+            data.dob,
+            data.tob,
+            data.place,
+            latitude=data.latitude,
+            longitude=data.longitude,
+            timezone=data.timezone
+        )
         report = generate_life_report(chart, dasha)
         return report
     except ValueError as e:

@@ -15,6 +15,7 @@ Rules:
 """
 
 from datetime import datetime, timedelta
+from typing import Optional
 import pytz
 from app.core.calculator import calculate_chart, NAKSHATRA_NAMES
 from app.core.geocoder import resolve_place
@@ -247,22 +248,32 @@ def _find_current(dashas: list[dict], today: str) -> dict:
 
 # ── Public API ────────────────────────────────────────────────────────────────
 
-def calculate_dasha(dob: str, tob: str, place: str) -> dict:
+def calculate_dasha(
+    dob: str,
+    tob: str,
+    place: str,
+    latitude: Optional[float] = None,
+    longitude: Optional[float] = None,
+    timezone: Optional[str] = None
+) -> dict:
     """
     Compute full Vimshottari Dasha tree + identify current active period.
 
     Parameters
     ----------
-    dob   : "YYYY-MM-DD"
-    tob   : "HH:MM"
-    place : human-readable birth place
+    dob       : "YYYY-MM-DD"
+    tob       : "HH:MM"
+    place     : human-readable birth place
+    latitude  : optional pre-resolved float
+    longitude : optional pre-resolved float
+    timezone  : optional pre-resolved IANA timezone string
 
     Returns
     -------
     dict matching DashaResponse schema
     """
-    # Get the D1 chart (reuses cached geocoding)
-    chart = calculate_chart(dob, tob, place)
+    # Get the D1 chart (reuses cached geocoding or direct coordinates)
+    chart = calculate_chart(dob, tob, place, latitude=latitude, longitude=longitude, timezone=timezone)
 
     # Moon's sidereal longitude seeds the Dasha
     moon = next(p for p in chart["planets"] if p["id"] == "Mo")
@@ -272,8 +283,8 @@ def calculate_dasha(dob: str, tob: str, place: str) -> dict:
 
     start_lord, balance_years = _moon_dasha_balance(moon_lon)
 
-    # Birth datetime (local) as Dasha anchor
-    _, _, tz_name = resolve_place(place)
+    # Birth datetime (local) as Dasha anchor - use timezone already resolved in chart
+    tz_name = chart["meta"]["timezone"]
     local_tz = pytz.timezone(tz_name)
     birth_dt = local_tz.localize(
         datetime.strptime(f"{dob} {tob}", "%Y-%m-%d %H:%M")

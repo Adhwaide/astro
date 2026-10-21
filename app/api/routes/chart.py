@@ -25,7 +25,14 @@ async def get_chart(data: BirthData):
     Returns full lagna, planetary positions, and house signs.
     """
     try:
-        result = calculate_chart(data.dob, data.tob, data.place)
+        result = calculate_chart(
+            data.dob,
+            data.tob,
+            data.place,
+            latitude=data.latitude,
+            longitude=data.longitude,
+            timezone=data.timezone
+        )
         
         # Phase 5: Calculate Yogas and Auto-generate Report
         yogas = detect_yogas(result)

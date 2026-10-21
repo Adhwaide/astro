@@ -12,9 +12,10 @@ Ephemeris  : looks for .se1 files in ephe/
 import os
 import swisseph as swe
 from datetime import datetime
+from typing import Optional
 import pytz
 from dotenv import load_dotenv
-from app.core.geocoder import resolve_place
+from app.core.geocoder import resolve_place, _tz_finder
 
 load_dotenv()
 
@@ -111,23 +112,42 @@ def to_julian_day(utc_dt: datetime) -> float:
 
 # ── Main function ─────────────────────────────────────────────────────────────
 
-def calculate_chart(dob: str, tob: str, place: str) -> dict:
+def calculate_chart(
+    dob: str,
+    tob: str,
+    place: str,
+    latitude: Optional[float] = None,
+    longitude: Optional[float] = None,
+    timezone: Optional[str] = None
+) -> dict:
     """
     Full Vedic chart calculation.
 
     Parameters
     ----------
-    dob   : "YYYY-MM-DD"
-    tob   : "HH:MM"
-    place : human-readable birth place
+    dob       : "YYYY-MM-DD"
+    tob       : "HH:MM"
+    place     : human-readable birth place
+    latitude  : optional pre-resolved float
+    longitude : optional pre-resolved float
+    timezone  : optional pre-resolved IANA timezone string
 
     Returns
     -------
     dict matching ChartResponse schema in models/request.py
     """
 
-    # 1. Geocode + Timezone (cached)
-    lat, lon, tz_name = resolve_place(place)
+    # 1. Geocode + Timezone (use direct coordinates if provided, else cached resolution)
+    if latitude is not None and longitude is not None:
+        lat, lon = float(latitude), float(longitude)
+        if timezone:
+            tz_name = timezone
+        else:
+            tz_name = _tz_finder.timezone_at(lat=lat, lng=lon)
+            if tz_name is None:
+                raise ValueError(f"Could not determine timezone for lat={lat}, lon={lon}")
+    else:
+        lat, lon, tz_name = resolve_place(place)
 
     # 2. UTC conversion
     utc_dt = local_to_utc(dob, tob, tz_name)

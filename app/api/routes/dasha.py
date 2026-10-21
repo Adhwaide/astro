@@ -25,7 +25,14 @@ async def get_dasha(data: BirthData):
     with exact start/end dates, plus the currently active period.
     """
     try:
-        result = calculate_dasha(data.dob, data.tob, data.place)
+        result = calculate_dasha(
+            data.dob,
+            data.tob,
+            data.place,
+            latitude=data.latitude,
+            longitude=data.longitude,
+            timezone=data.timezone
+        )
         return result
     except ValueError as e:
         raise HTTPException(status_code=422, detail=str(e))

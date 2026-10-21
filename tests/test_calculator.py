@@ -72,8 +72,8 @@ def test_full_chart():
     # ── Check Lagna ───────────────────────────────────────────────────────────
     lagna = result["lagna"]
     lagna_ok = lagna["sign"] == EXPECTED_LAGNA_SIGN
-    status = "✓" if lagna_ok else "✗ MISMATCH"
-    print(f"  LAGNA : {lagna['sign_name']} {lagna['degree']:.2f}°  {status}")
+    status = "[OK]" if lagna_ok else "[FAIL] MISMATCH"
+    print(f"  LAGNA : {lagna['sign_name']} {lagna['degree']:.2f} deg  {status}")
     if not lagna_ok:
         print(f"          Expected: {SIGN_NAMES[EXPECTED_LAGNA_SIGN]}")
 
@@ -100,8 +100,8 @@ def test_full_chart():
         if not ok:
             all_pass = False
 
-        retro_str = "℞" if p["retrograde"] else " "
-        status    = "✓" if ok else "✗"
+        retro_str = "R" if p["retrograde"] else " "
+        status    = "[OK]" if ok else "[FAIL]"
 
         print(f"  {p['id']:<4} {p['name']:<10} {p['sign_name']:<14} {p['degree']:>6.2f}°"
               f"  {p['nakshatra']:<22} {p['house']:>2}  {retro_str:<3}  {status}")
@@ -115,14 +115,14 @@ def test_full_chart():
     ju = planet_map.get("Ju")
     if ju:
         print(f"\n  {'Ju':<4} {ju['name']:<10} {ju['sign_name']:<14} {ju['degree']:>6.2f}°"
-              f"  {ju['nakshatra']:<22} {ju['house']:>2}  {'℞' if ju['retrograde'] else ' ':<3}  (verify manually)")
+              f"  {ju['nakshatra']:<22} {ju['house']:>2}  {'R' if ju['retrograde'] else ' ':<3}  (verify manually)")
 
     # ── Final verdict ─────────────────────────────────────────────────────────
     print(f"\n{'='*60}")
     if all_pass:
-        print("  RESULT : ALL CHECKS PASSED ✓ — Engine is accurate")
+        print("  RESULT : ALL CHECKS PASSED [OK] - Engine is accurate")
     else:
-        print("  RESULT : SOME CHECKS FAILED ✗ — Review mismatches above")
+        print("  RESULT : SOME CHECKS FAILED [FAIL] - Review mismatches above")
         print("  Tip    : Cross-check with Jagannatha Hora or Astro-Seek")
     print(f"{'='*60}\n")
 

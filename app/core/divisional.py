@@ -9,6 +9,7 @@ Each function takes a planet's sidereal longitude and its D1 rasi (sign index 0-
 and returns the divisional sign index (0-11).
 """
 
+from typing import Optional
 from app.core.calculator import (
     calculate_chart,
     SIGN_NAMES,
@@ -106,7 +107,15 @@ DIVISIONAL_FUNCS = {
 
 # ── Public API ────────────────────────────────────────────────────────────────
 
-def calculate_divisional(dob: str, tob: str, place: str, chart_type: str) -> dict:
+def calculate_divisional(
+    dob: str,
+    tob: str,
+    place: str,
+    chart_type: str = "D9",
+    latitude: Optional[float] = None,
+    longitude: Optional[float] = None,
+    timezone: Optional[str] = None
+) -> dict:
     """
     Compute a divisional chart.
 
@@ -116,13 +125,16 @@ def calculate_divisional(dob: str, tob: str, place: str, chart_type: str) -> dic
     tob        : "HH:MM"
     place      : human-readable birth place
     chart_type : "D1", "D2", "D9", "D10", or "D30"
+    latitude   : optional pre-resolved float
+    longitude  : optional pre-resolved float
+    timezone   : optional pre-resolved IANA timezone string
 
     Returns
     -------
     dict matching ChartResponse schema (same structure as /api/chart)
     """
     # Get the D1 (Rasi) chart first — all divisions are based on D1 longitudes
-    d1 = calculate_chart(dob, tob, place)
+    d1 = calculate_chart(dob, tob, place, latitude=latitude, longitude=longitude, timezone=timezone)
 
     if chart_type == "D1":
         return d1

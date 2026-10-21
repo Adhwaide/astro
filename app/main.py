@@ -7,20 +7,26 @@ Run locally: uvicorn app.main:app --reload --port 8000
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api.routes import chart, dasha, divisional, report
+from app.api.routes import chart, dasha, divisional, report, places
 
 app = FastAPI(
     title="Jyotisha Engine API",
     description="Vedic astrology calculation backend — D1/D9 charts, Dasha, Yogas, Life Report",
-    version="0.3.0",
+    version="0.3.1",
 )
 
 # ── CORS ──────────────────────────────────────────────────────────────────────
-# In production, replace "*" with your GitHub Pages URL
-# e.g. "https://yourusername.github.io"
+# Allow GitHub Pages in production and local dev ports
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://adhwaide.github.io"],
+    allow_origins=[
+        "https://adhwaide.github.io",
+        "http://localhost:5173",
+        "http://localhost:5174",
+        "http://localhost:3000",
+        "http://127.0.0.1:5173",
+        "http://127.0.0.1:5174",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -31,6 +37,7 @@ app.include_router(chart.router, prefix="/api")
 app.include_router(dasha.router, prefix="/api")
 app.include_router(divisional.router, prefix="/api")
 app.include_router(report.router, prefix="/api")
+app.include_router(places.router, prefix="/api")
 
 
 @app.get("/health")
